@@ -15,15 +15,6 @@ $currentTime = time();
 $firstPinnedRow = getFirsPinnedRowFromDb();
 $pinnedTime = $firstPinnedRow['date'] ?? null;
 
-print_r([
-    'i' => $interval,
-    'currentTime' => $currentTime,
-    'pinnedTime' => $pinnedTime,
-    'diff' => ($currentTime - $pinnedTime) / 60,
-    'do not proceed' => boolval($currentTime < ($pinnedTime + $interval)) ? 'true' : "false"
-]);
-
-
 if (!is_null($pinnedTime) && $currentTime < ($pinnedTime + $interval)) {
     // We are not running out of time
     exit();

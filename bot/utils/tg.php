@@ -54,8 +54,6 @@ function sendImage(TgLog $tgLog, $destId, $address) {
     $sendPhoto->caption = prepareMessage();
     $promise = $tgLog->performApiRequest($sendPhoto);
 
-
-
     $promise->then(function() use ($photoFile, $imgName) {
         fclose($photoFile->getStream());
         cleanImage($imgName);

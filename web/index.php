@@ -1,6 +1,7 @@
 <?php
 
-require_once '../config.php';
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/utils.php';
 define('BASE_FIELD', 'currency');
 
 if (!empty($_POST)) {
@@ -10,10 +11,17 @@ if (!empty($_POST)) {
 
 require_once './init.php';
 
+$lang = $lang ?? 'us';
+$lang2 = $lang2 ?? 'ru';
 $interval = $interval ?? 0;
 $groups = $groups ?? [];
 $description = $description ?? "";
 $address = $address ?? '';
+$descriptionText = $description[$lang] ?? '';
+$languages = [
+    'ru' => 'Русский',
+    'us' => 'English',
+];
 
 ?>
 
@@ -25,13 +33,30 @@ $address = $address ?? '';
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Durianbot config</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
     <script src="js/script.js"></script>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+        <div class="collapse navbar-collapse" id="navbarsExample09">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="<?php print $lang; ?>" data-toggle="dropdown">
+                        <span class="flag-icon flag-icon-<?php print $lang; ?>"></span> <?php print $languages[$lang]; ?>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="<?php print $lang2; ?>"><span class="flag-icon flag-icon-<?php print $lang2; ?>"></span> <?php print $languages[$lang2]; ?></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 <form action="./index.php" method="post" class="container">
-
+    <input type="hidden" name="lang" value="<?php print $lang; ?>"/>
     <div class="row">
         <div class="py-5 col-md-4 order-md-2 mb-4">
             <div class="mb-3">
@@ -100,13 +125,15 @@ $address = $address ?? '';
                 <div class="mb-3">
                     <label>
                         <p>Short description of bot</p>
-                        <textarea class="form-control" name="description"><?php print $description; ?></textarea>
+                        <textarea class="form-control" name="description"><?php print $descriptionText; ?></textarea>
                     </label>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </form>
 </body>
 </html>

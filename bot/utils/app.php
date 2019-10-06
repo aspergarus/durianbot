@@ -2,6 +2,18 @@
 
 use chillerlan\QRCode\QRCode;
 
+global $templates;
+$templates = [
+    'payment_options' => [
+        'ru' => "Варианты оплаты: %s",
+        'us' => "Payment options: %s",
+    ],
+    'coin_at_least' => [
+        'ru' => "%s минимально от %s",
+        'us' => "%s at least %s",
+    ],
+];
+
 function getBotConfig() {
     $content = file_get_contents(CONFIG_BOT_FILENAME);
 
@@ -20,24 +32,32 @@ function getInterval() {
     return getBotConfig()['interval'] ?? '';
 }
 
+function getLang() {
+    return getBotConfig()['lang'] ?? 'us';
+}
+
 function getDescription() {
-    return getBotConfig()['description'] ?? '';
+    return getBotConfig()['description'][getLang()] ?? '';
 }
 
 function prepareGroups() {
+    global $templates;
+
     $res = [];
 
     foreach (getGroups() as $group) {
-        $res[] = sprintf("%s at least %s", $group['currency'], $group['pay_min']);
+        $res[] = sprintf($templates["coin_at_least"][getLang()], $group['currency'], $group['pay_min']);
     }
 
     return join("; ", $res);
 }
 
 function prepareMessage() {
+    global $templates;
+
     $paymenMethods = prepareGroups();
 
-    return sprintf("Payment options: %s", $paymenMethods);
+    return sprintf($templates['payment_options'][getLang()], $paymenMethods);
 }
 
 function generateImage($data, $fileName) {

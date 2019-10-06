@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
 
             e.currentTarget.closest('div.row').remove();
-        })
+        });
     });
 });
 

@@ -1,7 +1,7 @@
 <?php
 
 saveIntoFile($_POST, CONFIG_BOT_FILENAME);
-header("Location: ./index.php");
+header("Location: ./" . $_POST['lang']);
 
 function processGroups($input) {
     $fieldNames = ['currency', 'pay_min'];
@@ -63,9 +63,14 @@ function saveIntoFile($input, $filename) {
     $result = [
         'groups' => $groups ?? [],
         'interval' => $input['interval'],
-        'description' => $input['description'],
         'address' => $input['address'],
+        'lang' => $input['lang'],
     ];
+
+    $config = readConfigFromFile($filename);
+    $result['description'] = $config['description'] ?: [];
+    $result['description'][$input['lang']] = $input['description'];
+
 
     file_put_contents($filename, serialize($result));
     file_put_contents($filename . '.json', json_encode($result, 1));
