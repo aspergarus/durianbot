@@ -84,6 +84,7 @@ function processWalletBalanceInDb($coin, $val, $wallet, MinterAPI $api) {
     }
 
     setInQueue($wallet['id']);
+    markProcessedWallet($wallet['id']);
     // deleteUser($wallet['id']);
 }
 

@@ -28,7 +28,7 @@ function prepareGroups() {
     $res = [];
 
     foreach (getGroups() as $group) {
-        $res[] = sprintf("%s от %s", $group['currency'], $group['pay_min']);
+        $res[] = sprintf("%s at least %s", $group['currency'], $group['pay_min']);
     }
 
     return join("; ", $res);
@@ -37,7 +37,7 @@ function prepareGroups() {
 function prepareMessage() {
     $paymenMethods = prepareGroups();
 
-    return sprintf("Варианты оплаты: %s", $paymenMethods);
+    return sprintf("Payment options: %s", $paymenMethods);
 }
 
 function generateImage($data, $fileName) {

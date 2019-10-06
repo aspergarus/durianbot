@@ -20,6 +20,7 @@ $fileDb->exec("CREATE TABLE IF NOT EXISTS messages (
 
 $fileDb->exec("CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY,
+                    status INTEGER,
                     address TEXT,
                     tgId TEXT,
                     secret TEXT,

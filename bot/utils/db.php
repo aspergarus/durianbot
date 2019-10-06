@@ -103,10 +103,10 @@ function deleteFirstPin($row) {
     $stmt->execute();
 }
 
-function saveUser($address, $tgId, $secret, $seed) {
+function saveUser($address, $tgId, $secret, $seed, $status) {
     $fileDb = initDb();
 
-    $query = "INSERT INTO users (address, tgId, secret, seed) VALUES (:addr, :tg, :secret, :seed)";
+    $query = "INSERT INTO users (address, tgId, secret, seed, status) VALUES (:addr, :tg, :secret, :seed, :status)";
     $stmt = $fileDb->prepare($query);
 
     // Bind parameters to statement variables
@@ -114,6 +114,7 @@ function saveUser($address, $tgId, $secret, $seed) {
     $stmt->bindParam(':tg', $tgId);
     $stmt->bindParam(':secret', $secret);
     $stmt->bindParam(':seed', $seed);
+    $stmt->bindParam(':status', $status);
 
     $stmt->execute();
 
@@ -122,11 +123,15 @@ function saveUser($address, $tgId, $secret, $seed) {
 
 function getWallets() {
     $fileDb = initDb();
+    $status = PAYMENT_WAITING;
 
-    $query = "SELECT * FROM users";
-    $result = $fileDb->query($query);
+    $query = "SELECT * FROM users WHERE status = :status";
+    $stmt = $fileDb->prepare($query);
+    $stmt->execute([
+        ':status' => $status
+    ]);
 
-    return $result->fetchAll(PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function deleteUser($userId) {
@@ -135,6 +140,19 @@ function deleteUser($userId) {
     $query = "DELETE FROM users WHERE id = :id";
     $stmt = $fileDb->prepare($query);
     $stmt->bindParam(':id',  $userId);
+
+    $stmt->execute();
+}
+
+function markProcessedWallet($userId) {
+    $fileDb = initDb();
+
+    $status = PAYMENT_COMPLETED;
+
+    $query = "UPDATE users SET status = :status WHERE id = :id";
+    $stmt = $fileDb->prepare($query);
+    $stmt->bindParam(':id',  $userId);
+    $stmt->bindParam(':status',  $status);
 
     $stmt->execute();
 }
