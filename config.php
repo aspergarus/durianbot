@@ -20,3 +20,7 @@ define("BOT_LINK", "@absurdman_bot");
 
 // DB
 define("LIFE_TIME_RECORDS", 3600 * 24); // 1 day
+
+// Payment consts
+define('PAYMENT_COMPLETED', 1);
+define('PAYMENT_WAITING', 0);

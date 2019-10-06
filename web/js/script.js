@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         e.addEventListener('click', function(e) {
             e.preventDefault();
 
-            e.currentTarget.closest('div').remove();
+            e.currentTarget.closest('div.row').remove();
         })
     });
 });
