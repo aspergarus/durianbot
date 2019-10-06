@@ -26,37 +26,3 @@ $fileDb->exec("CREATE TABLE IF NOT EXISTS users (
                     secret TEXT,
                     seed TEXT
                     )");
-
-$messages = [
-    [
-        'message' => 'Just testing...',
-        'updateId' => '123',
-        'status' => 'waiting',
-        'date' => time(),
-        'userId' => 1,
-    ],
-    [
-        'message' => 'More testing...',
-        'updateId' => '124',
-        'status' => 'waiting',
-        'date' => time(),
-        'userId' => 1,
-    ],
-    [
-        'message' => 'SQLite3 is cool...',
-        'updateId' => '125',
-        'status' => 'waiting',
-        'date' => time(),
-        'userId' => 1,
-    ]
-];
-
-foreach ($messages as $m) {
-    $updateId = $m['updateId'];
-    $message = $m['message'];
-    $status = $m['status'];
-    $createdAt = $m['date'];
-    $uid = $m['userId'];
-
-    saveMessage($updateId, $message, $status, $createdAt, $uid);
-}
