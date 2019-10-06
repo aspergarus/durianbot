@@ -88,14 +88,6 @@ $address = $address ?? '';
 
             <div class="col-md-12">
                 <div class="mb-3">
-                    <label for="address">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
-                    <div class="invalid-feedback">
-                        Please enter your shipping address.
-                    </div>
-                </div>
-
-                <div class="mb-3">
                     <label>Wallet</label>
                     <input class="form-control" name="address" value="<?php print $address; ?>" />
                 </div>
