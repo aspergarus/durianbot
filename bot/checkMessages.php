@@ -11,6 +11,10 @@ use \React\EventLoop\Factory;
 use \unreal4u\TelegramAPI\HttpClientRequestHandler;
 use \unreal4u\TelegramAPI\TgLog;
 
+if (!file_exists(IMAGE_TEMP_DIR)) {
+    mkdir(IMAGE_TEMP_DIR);
+}
+
 $loop = Factory::create();
 
 $handler = new HttpClientRequestHandler($loop);

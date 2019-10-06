@@ -65,7 +65,7 @@ function generateImage($data, $fileName) {
 }
 
 function getImageName($id) {
-    return __DIR__ . '/../QRs/' . $id . '.svg';
+    return IMAGE_TEMP_DIR . $id . '.svg';
 }
 
 function cleanImage($imageFilePath) {

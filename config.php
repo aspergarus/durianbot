@@ -23,3 +23,5 @@ define("LIFE_TIME_RECORDS", 3600 * 24); // 1 day
 // Payment consts
 define('PAYMENT_COMPLETED', 1);
 define('PAYMENT_WAITING', 0);
+
+define("IMAGE_TEMP_DIR", __DIR__ . "/bot/QRs/");
