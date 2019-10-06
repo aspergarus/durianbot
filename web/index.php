@@ -9,7 +9,7 @@ if (!empty($_POST)) {
     die();
 }
 
-require_once './init.php';
+require_once __DIR__ . './init.php';
 
 $lang = $lang ?? 'us';
 $lang2 = $lang2 ?? 'ru';
