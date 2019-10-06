@@ -5,3 +5,4 @@ config.json
 TODO
 info
 bot/QRs
+bot/db/messaging.sqlite3
