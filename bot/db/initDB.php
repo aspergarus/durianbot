@@ -6,6 +6,7 @@ $fileDb = initDb();
 
 try {
     $fileDb->exec("DROP TABLE messages");
+    $fileDb->exec("DROP TABLE users");
 } catch (Exception $e) {}
 
 $fileDb->exec("CREATE TABLE IF NOT EXISTS messages (
@@ -13,26 +14,44 @@ $fileDb->exec("CREATE TABLE IF NOT EXISTS messages (
                     updateId INTEGER,
                     status TEXT,
                     date DATE,
-                    message TEXT)");
+                    message TEXT,
+                    userId INTEGER
+)");
+
+$fileDb->exec("CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY,
+                    address TEXT,
+                    tgId TEXT
+                    )");
 
 $messages = [
     [
         'message' => 'Just testing...',
         'updateId' => '123',
         'status' => 'waiting',
-        'date' => time()
+        'date' => time(),
+        'userId' => 1,
     ],
     [
         'message' => 'More testing...',
         'updateId' => '124',
         'status' => 'waiting',
-        'date' => time()
+        'date' => time(),
+        'userId' => 1,
     ],
     [
         'message' => 'SQLite3 is cool...',
         'updateId' => '125',
         'status' => 'waiting',
-        'date' => time()
+        'date' => time(),
+        'userId' => 1,
+    ]
+];
+
+$users = [
+    [
+        'address' => "123",
+        "tgId" => 'ASDASXZV',
     ]
 ];
 
@@ -41,6 +60,14 @@ foreach ($messages as $m) {
     $message = $m['message'];
     $status = $m['status'];
     $createdAt = $m['date'];
+    $uid = $m['userId'];
 
-    saveInDb($updateId, $message, $status, $createdAt);
+    saveMessage($updateId, $message, $status, $createdAt, $uid);
+}
+
+foreach ($users as $user) {
+    $address = $user['address'];
+    $telegramUser = $user['tgId'];
+
+    saveUser($address, $telegramUser);
 }

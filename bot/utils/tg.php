@@ -30,10 +30,11 @@ function saveLastUpdates(TgLog $tgLog) {
 //                    'messageId' => $update->message->message_id,
 //                    'text' => $update->message->text,
 //                ]);
+                $newWallet = createWallet();
 
-                sendImage($tgLog, $update->message->chat->id, $update->update_id);
-                // sendMsg($tgLog, $update->message->chat->id, $update->message->text . " - cсам такий");
-                saveInDb($update->update_id, $update->message->text, 'waiting', time());
+                sendImage($tgLog, $update->message->chat->id, $newWallet['address']);
+                saveMessage($update->update_id, $update->message->text, 'waiting', time(), $update->message->chat->id);
+                saveUser($newWallet['address'], $update->message->chat->id);
             }
         },
         function (\Exception $exception) {
@@ -42,16 +43,23 @@ function saveLastUpdates(TgLog $tgLog) {
     );
 }
 
-function sendImage(TgLog $tgLog, $destId, $updateId) {
-    $address = getAddress();
+function sendImage(TgLog $tgLog, $destId, $address) {
     $imgName = getImageName($address);
     generateImage($address, $imgName);
+    $photoFile = new InputFile($imgName);
 
     $sendPhoto = new SendPhoto();
     $sendPhoto->chat_id = $destId;
-    $sendPhoto->photo = new InputFile($imgName);
-    $sendPhoto->caption = prepareMessage($updateId);
-    $tgLog->performApiRequest($sendPhoto);
+    $sendPhoto->photo = $photoFile;
+    $sendPhoto->caption = prepareMessage();
+    $promise = $tgLog->performApiRequest($sendPhoto);
+
+
+
+    $promise->then(function() use ($photoFile, $imgName) {
+        fclose($photoFile->getStream());
+        cleanImage($imgName);
+    });
 }
 
 function sendMsg(TgLog $tgLog, $destId, $text) {

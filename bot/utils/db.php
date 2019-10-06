@@ -10,10 +10,12 @@ function initDb() {
     return $fileDB;
 }
 
-function saveInDb($updateId, $message, $status, $time) {
+function saveMessage($updateId, $message, $status, $time, $uid) {
     $fileDb = initDb();
 
-    $query = "INSERT INTO messages (updateId, message, status, date) VALUES (:updateId, :message, :status, :date)";
+    $query = "INSERT INTO 
+        messages (updateId, message, status, date, userId)
+    VALUES (:updateId, :message, :status, :date, :uid)";
     $stmt = $fileDb->prepare($query);
 
     // Bind parameters to statement variables
@@ -21,6 +23,7 @@ function saveInDb($updateId, $message, $status, $time) {
     $stmt->bindParam(':message', $message);
     $stmt->bindParam(':status', $status);
     $stmt->bindParam(':date', $time);
+    $stmt->bindParam(':uid', $uid);
 
     $stmt->execute();
 }
@@ -96,6 +99,19 @@ function deleteFirstPin($row) {
     $query = "DELETE FROM messages WHERE id = :id";
     $stmt = $fileDb->prepare($query);
     $stmt->bindParam(':id', $row['id']);
+
+    $stmt->execute();
+}
+
+function saveUser($address, $tgId) {
+    $fileDb = initDb();
+
+    $query = "INSERT INTO users (address, tgId) VALUES (:addr, :tg)";
+    $stmt = $fileDb->prepare($query);
+
+    // Bind parameters to statement variables
+    $stmt->bindParam(':addr', $address);
+    $stmt->bindParam(':tg', $tgId);
 
     $stmt->execute();
 }

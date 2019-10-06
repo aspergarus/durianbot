@@ -28,16 +28,16 @@ function prepareGroups() {
     $res = [];
 
     foreach (getGroups() as $group) {
-        $res[] = sprintf("%s [От %s, до %s]", $group['currency'], $group['pay_min'], $group['pay_max']);
+        $res[] = sprintf("%s от %s", $group['currency'], $group['pay_min']);
     }
 
     return join("; ", $res);
 }
 
-function prepareMessage($updateId) {
+function prepareMessage() {
     $paymenMethods = prepareGroups();
 
-    return sprintf("В сообщении отправки укажите идентификатор сообщения - %s. Варианты оплаты: %s", $updateId, $paymenMethods);
+    return sprintf("Варианты оплаты: %s", $paymenMethods);
 }
 
 function generateImage($data, $fileName) {
@@ -46,4 +46,8 @@ function generateImage($data, $fileName) {
 
 function getImageName($id) {
     return __DIR__ . '/../QRs/' . $id . '.svg';
+}
+
+function cleanImage($imageFilePath) {
+    unlink($imageFilePath);
 }
