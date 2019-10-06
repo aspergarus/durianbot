@@ -5,11 +5,32 @@ require_once __DIR__ . "/../config.php";
 require_once __DIR__ . "/utils/app.php";
 require_once __DIR__ . "/utils/tg.php";
 require_once __DIR__ . "/utils/db.php";
+require_once __DIR__ . "/utils/minter.php";
 
-// use Minter\MinterAPI;
-// $api = new MinterAPI(MINTER_NODE);
+use Minter\MinterAPI;
+$api = new MinterAPI(MINTER_NODE);
 
-processTxInDb(getAllTransactions(WALLET));
+$wallets = getWallets();
+
+foreach ($wallets as $wallet) {
+    $address = $wallet['address'];
+    $balance = getBalance($api, $address);
+    $balance = (array) $balance->result->balance;
+
+    $balance = array_filter($balance, function ($val) {
+        return $val > 0;
+    });
+
+    foreach ($balance as $coin => $val) {
+        processWalletBalanceInDb($coin, getHumanBalance($val), $wallet, $api);
+    }
+
+    // processTxInDb(getAllTransactions(WALLET));
+}
+
+function getBalance(MinterAPI $api, $address) {
+    return $api->getBalance($address);
+}
 
 function getAllTransactions($address) {
     $allTransactionsData = [];
@@ -46,15 +67,33 @@ function getUsefulInfo($transactions) {
     });
 }
 
-function processTxInDb($allTx) {
-    $grps = getGroups();
+function processWalletBalanceInDb($coin, $val, $wallet, MinterAPI $api) {
+    $tx = [
+        'coin' => $coin,
+        'val' => $val,
+    ];
 
-    $allTx = array_filter($allTx, function($tx) use ($grps) {
+    if (!validateCurrency($tx)) {
+        return;
+    }
+
+    $result = transferFunds($api, getAddress(), $wallet['address'], $wallet['secret'], $coin, $val);
+
+    if (empty($result)) {
+        return;
+    }
+
+    setInQueue($wallet['id']);
+    // deleteUser($wallet['id']);
+}
+
+function processTxInDb($allTx) {
+    $allTx = array_filter($allTx, function($tx) {
         if (empty($tx['payload'])) {
             return false;
         }
 
-        return validateCurrency($tx, $grps);
+        return validateCurrency($tx);
     });
 
     foreach ($allTx as $tx) {
@@ -62,7 +101,9 @@ function processTxInDb($allTx) {
     }
 }
 
-function validateCurrency($tx, $grps) {
+function validateCurrency($tx) {
+    $grps = getGroups();
+
     $currency = strtoupper($tx['coin']);
     foreach ($grps as $grp) {
         if (strtoupper($grp['currency']) == $currency) {

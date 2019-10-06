@@ -21,7 +21,9 @@ $fileDb->exec("CREATE TABLE IF NOT EXISTS messages (
 $fileDb->exec("CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY,
                     address TEXT,
-                    tgId TEXT
+                    tgId TEXT,
+                    secret TEXT,
+                    seed TEXT
                     )");
 
 $messages = [
@@ -48,13 +50,6 @@ $messages = [
     ]
 ];
 
-$users = [
-    [
-        'address' => "123",
-        "tgId" => 'ASDASXZV',
-    ]
-];
-
 foreach ($messages as $m) {
     $updateId = $m['updateId'];
     $message = $m['message'];
@@ -63,11 +58,4 @@ foreach ($messages as $m) {
     $uid = $m['userId'];
 
     saveMessage($updateId, $message, $status, $createdAt, $uid);
-}
-
-foreach ($users as $user) {
-    $address = $user['address'];
-    $telegramUser = $user['tgId'];
-
-    saveUser($address, $telegramUser);
 }

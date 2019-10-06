@@ -31,10 +31,10 @@ function saveLastUpdates(TgLog $tgLog) {
 //                    'text' => $update->message->text,
 //                ]);
                 $newWallet = createWallet();
+                $userId = saveUser($newWallet['address'], $update->message->chat->id, $newWallet['private_key'], $newWallet['mnemonic']);
 
                 sendImage($tgLog, $update->message->chat->id, $newWallet['address']);
-                saveMessage($update->update_id, $update->message->text, 'waiting', time(), $update->message->chat->id);
-                saveUser($newWallet['address'], $update->message->chat->id);
+                saveMessage($update->update_id, $update->message->text, 'waiting', time(), $userId);
             }
         },
         function (\Exception $exception) {

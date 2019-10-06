@@ -71,12 +71,12 @@ function getFirstQueuedRowFromDb() {
     return $result->fetch(PDO::FETCH_ASSOC);
 }
 
-function setInQueue($updateId) {
+function setInQueue($userId) {
     $fileDb = initDb();
 
-    $query = "UPDATE messages SET status = 'queue' WHERE updateId = :updateId";
+    $query = "UPDATE messages SET status = 'queue' WHERE userId = :userId";
     $stmt = $fileDb->prepare($query);
-    $stmt->bindParam(':updateId', $updateId);
+    $stmt->bindParam(':userId', $userId);
 
     $stmt->execute();
 }
@@ -103,15 +103,38 @@ function deleteFirstPin($row) {
     $stmt->execute();
 }
 
-function saveUser($address, $tgId) {
+function saveUser($address, $tgId, $secret, $seed) {
     $fileDb = initDb();
 
-    $query = "INSERT INTO users (address, tgId) VALUES (:addr, :tg)";
+    $query = "INSERT INTO users (address, tgId, secret, seed) VALUES (:addr, :tg, :secret, :seed)";
     $stmt = $fileDb->prepare($query);
 
     // Bind parameters to statement variables
     $stmt->bindParam(':addr', $address);
     $stmt->bindParam(':tg', $tgId);
+    $stmt->bindParam(':secret', $secret);
+    $stmt->bindParam(':seed', $seed);
+
+    $stmt->execute();
+
+    return $fileDb->lastInsertId();
+}
+
+function getWallets() {
+    $fileDb = initDb();
+
+    $query = "SELECT * FROM users";
+    $result = $fileDb->query($query);
+
+    return $result->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function deleteUser($userId) {
+    $fileDb = initDb();
+
+    $query = "DELETE FROM users WHERE id = :id";
+    $stmt = $fileDb->prepare($query);
+    $stmt->bindParam(':id',  $userId);
 
     $stmt->execute();
 }
