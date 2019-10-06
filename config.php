@@ -4,7 +4,6 @@
 define('CONFIG_BOT_FILENAME', __DIR__ . '/config');
 
 // Minter
-define('WALLET', 'Mxe7d1eb69b89598f9b8e532b40ab954ef7a6d0b02');
 define('MINTER_NODE', "http://api-01.minter.store:8841");
 
 // Alternatives for MINTER_NODE
