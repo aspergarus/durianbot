@@ -13,7 +13,7 @@ define('MINTER_NODE', "http://api-01.minter.store:8841");
 // 'https://minter-node-1.testnet.minter.network:8841'
 
 // Static config of bot
-define("BOT_TOKEN", getenv("BOT_TOKEN"));
+define("BOT_TOKEN", "816007154AAEYlrhj1vN8w4xVHhZYtXKLT9Tgy_I18l4");
 define("A_USER_CHAT_ID", "-1001458034081");
 define("BOT_LINK", "@absurdman_bot");
 
