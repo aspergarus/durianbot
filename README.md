@@ -11,6 +11,4 @@ Firstly init DB. Then run web server to configure bot. The last thing, run 3 wat
 
 # To run bot subscribers
 
-* watch -n 5 "php bot/checkMessages.php"
-* watch -n 5 "php bot/checkPayment.php"
-* watch -n 60 "php bot/pinner.php"
+> sh/bot/run.sh
